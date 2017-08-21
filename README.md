@@ -4,10 +4,10 @@ App Symfony Learning
 ** Add Controller file 
 
 ** Create folder todo
-... Create file index.html.twig
-... Create file create.html.twig
-... Create file edit.html.twig
-... Create file details.html.twig
+...Create file index.html.twig
+...Create file create.html.twig
+...Create file edit.html.twig
+...Create file details.html.twig
 
 Now to the controller add the four methods corresponding to views file.
 
