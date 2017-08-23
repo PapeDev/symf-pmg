@@ -1,13 +1,13 @@
 App Symfony Learning
 ========================
 
-** Add Controller file 
+Add Controller file 
 
-** Create folder todo
-...Create file index.html.twig
-...Create file create.html.twig
-...Create file edit.html.twig
-...Create file details.html.twig
+Create folder todo
+  Create file index.html.twig
+  Create file create.html.twig
+  Create file edit.html.twig
+  Create file details.html.twig
 
 Now to the controller add the four methods corresponding to views file.
 
@@ -25,10 +25,10 @@ for example : method indexAction
 ```
 
 ```php
-    /**
+     /**
      * @Route("/todo/create", name="todo_create")
      */
-    public function indexAction(Request $request)
+    public function createAction(Request $request)
     {
         // code
     }
