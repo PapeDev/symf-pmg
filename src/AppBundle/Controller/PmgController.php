@@ -2,9 +2,17 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Todo;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class PmgController extends Controller
 {
@@ -13,8 +21,10 @@ class PmgController extends Controller
      */
     public function listAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('todo/index.html.twig');
+        $todos = $this->getDoctrine()
+        ->getRepository('AppBundle:Todo')
+        ->findAll();
+        return $this->render('todo/index.html.twig', array('todos' => $todos));
     }
 
     /**
@@ -22,8 +32,49 @@ class PmgController extends Controller
      */
     public function createAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('todo/create.html.twig');
+
+        $todo = new Todo();
+        $form = $this->createFormBuilder($todo)
+        ->add('name', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom: 15px')))
+        ->add('category', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom: 15px')))
+        ->add('description', TextareaType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom: 15px')))
+        ->add('priority', ChoiceType::class, array('choices' => array('Low' => 'Low', 'Normal' => 'Normal', 'High' => 'High'), 'attr' => array('class' => 'form-control', 'style' => 'margin-bottom: 15px')))
+        ->add('due_date', DateTimeType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom: 15px')))
+        ->add('save', SubmitType::class, array('label' => 'Créer Tâche', 'attr' => array('class' => 'btn btn-primary', 'style' => 'margin-bottom: 15px')))
+        ->getForm();
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $name = $form['name']->getData();
+            $category = $form['category']->getData();
+            $description = $form['description']->getData();
+            $priority = $form['priority']->getData();
+            $due_date = $form['due_date']->getData();
+
+            $now = new \DateTime('now');
+            $todo->setName($name);
+            $todo->setCategory($category);
+            $todo->setDescription($description);
+            $todo->setPriority($priority);
+            $todo->setDueDate($due_date);
+            $todo->setCreatedAt($now);
+
+            $em = $this->getDoctrine()->getManager();
+
+            $em->persist($todo);
+            $em->flush();
+
+            $this->addFlash('notice','Tâche ajoutée');
+            return $this->redirectToRoute('todo_list');
+        }
+
+        //$todo->setName('PapiImmo');
+        //$todo->setCategory('Projet');
+        //$todo->setDescription('Work app of management Rental');
+        //$todo->setPriority('High');
+        //$todo->setDueDate(new \DateTime());
+        return $this->render('todo/create.html.twig', array('form' => $form->createView()));
     }
 
     /**
