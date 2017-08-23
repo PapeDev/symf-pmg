@@ -1,1 +1,36 @@
-<h1>Liste des tâches</h1>
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-header">Derniéres Tâches</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Todo</th>
+      <th>Date</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>
+      	<a href="/todo/details/1" class="btn btn-success">Voir</a>
+      	<a href="/todo/edit/1" class="btn btn-default">Editer</a>
+      	<a href="/todo/delete/1" class="btn btn-danger">Supprimer</a>
+      </td>
+
+    </tr>
+    
+    
+  </tbody>
+</table>
+
+{% endblock %}
